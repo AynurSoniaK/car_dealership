@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Car dealership
+{% endblock %}
+
+{% block body %}
+	<div class="container py-4">
+		<div class="d-flex justify-content-between">
+			<div>
+				<h1>Car dealership</h1>
+			</div>
+			<div class="d-flex align-items-center">
+				<a href="/dashboard" class="btn btn-primary me-2">Dashboard</a>
+				<span class="badge rounded-pill bg-info fs-4">{{ weatherData.current_weather.temperature }}°</span>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<form action="{{ path('app_home') }}" method="GET">
+					<div class="row">
+						<div class="col-8">
+							<div class="form-group">
+								<input type="text" name="search" class="form-control border-0 border-bottom" placeholder="Search by name" value="{{ searchTerm }}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group mt-3">
+						<label>Filter by Category:</label><br>
+						{% for category in categories %}
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="categories[]" value="{{ category.id }}" {% if category.id in selectedCategories %} checked {% endif %}>
+								<label class="form-check-label">{{ category.name }}</label>
+							</div>
+						{% endfor %}
+					</div>
+					<div class="col-4">
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary mt-3">Search</button>
+							<button type="button" class="btn btn-secondary mt-3" onclick="window.location='{{ path('app_home') }}'">Clear</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			{% for car in pagination %}
+				<div class="col-md-4">
+					<div class="card my-2">
+						<div class="card-body">
+							<h3 class="card-title">{{ car.name }}</h3>
+							<p class="card-text">
+								<strong>Seats:</strong>
+								{{ car.nbSeats }}<br>
+								<strong>Doors:</strong>
+								{{ car.nbDoors }}<br>
+								<strong>Cost:</strong>
+								{{ car.cost }}<br>
+								<strong>Category:</strong>
+								{{ car.category.name }}
+							</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+			{{ knp_pagination_render(pagination) }}
+	</div>
+{% endblock %}
